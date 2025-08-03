@@ -1,8 +1,9 @@
 { pkgs, lib, config, inputs, ... }:
 
 {
+
   # https://devenv.sh/basics/
-  env.GREET = "devenv";
+  # env.GREET = "devenv";
 
   # https://devenv.sh/packages/
   packages = [
@@ -16,17 +17,27 @@
   # processes.cargo-watch.exec = "cargo-watch";
 
   # https://devenv.sh/services/
-  # services.postgres.enable = true;
+  services.nginx.enable = true;
+  services.nginx.httpConfig = ''
+    server {
+      listen       8888;
+      server_name  localhost;
+
+      location /api/v4 {
+        proxy_pass http://localhost:8080;
+      }
+    }
+  '';
 
   # https://devenv.sh/scripts/
-  scripts.hello.exec = ''
-    echo hello from $GREET
-  '';
+  # scripts.hello.exec = ''
+  #   echo hello from $GREET
+  # '';
 
-  enterShell = ''
-    hello
-    git --version
-  '';
+  # enterShell = ''
+  #   hello
+  #   git --version
+  # '';
 
   # https://devenv.sh/tasks/
   # tasks = {
@@ -35,13 +46,14 @@
   # };
 
   # https://devenv.sh/tests/
-  enterTest = ''
-    echo "Running tests"
-    git --version | grep --color=auto "${pkgs.git.version}"
-  '';
+  # enterTest = ''
+  #   echo "Running tests"
+  #   git --version | grep --color=auto "${pkgs.git.version}"
+  # '';
 
   # https://devenv.sh/git-hooks/
   # git-hooks.hooks.shellcheck.enable = true;
 
   # See full reference at https://devenv.sh/reference/options/
+
 }
