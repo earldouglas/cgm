@@ -1,4 +1,10 @@
-{ pkgs, lib, config, inputs, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  inputs,
+  ...
+}:
 
 let
 
@@ -8,7 +14,8 @@ let
     inherit pkgs nodejs;
   };
 
-in {
+in
+{
 
   # https://devenv.sh/basics/
   # env.GREET = "devenv";
