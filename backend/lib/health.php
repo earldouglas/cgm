@@ -9,7 +9,7 @@
         function ($manager) {
           return 'ok';
         }
-      )->orElse(
+      )->run(
         function () {
           return 'nope';
         }

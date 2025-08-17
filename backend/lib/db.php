@@ -10,7 +10,7 @@
       $this->uri = $uri;
     }
 
-    public function orElse($k) {
+    public function run($k) {
 
       $result = NULL;
 
@@ -62,7 +62,7 @@
         function ($x) {
           return 'yep';
         }
-      )->orElse(
+      )->run(
         function () {
           return 'nope';
         }
@@ -83,7 +83,7 @@
         function ($x) {
           return 'yep';
         }
-      )->orElse(
+      )->run(
         function () {
           return 'nope';
         }
