@@ -76,4 +76,10 @@ in
     }
   '';
 
+  enterTest = ''
+    wait_for_port 8888
+    export TEST=true
+    find backend/ -type f -name "*.php" -print0 | \
+      xargs -n 1 -0 php
+  '';
 }
