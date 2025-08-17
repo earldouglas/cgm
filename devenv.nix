@@ -17,19 +17,29 @@ let
 in
 {
 
-  # https://devenv.sh/basics/
-  # env.GREET = "devenv";
-
-  # https://devenv.sh/packages/
-  packages = [
-    pkgs.sbt
-  ];
-
   # https://devenv.sh/languages/
-  # languages.rust.enable = true;
+  languages.php = {
+    enable = true;
+    version = "8.4";
+    extensions = [ "mongodb" ];
+
+    ini = ''
+      memory_limit = 512M
+    '';
+
+    fpm.pools.web = {
+      settings = {
+        "pm" = "dynamic";
+        "pm.max_children" = 5;
+        "pm.start_servers" = 2;
+        "pm.min_spare_servers" = 1;
+        "pm.max_spare_servers" = 5;
+        "security.limit_extensions" = ".php";
+      };
+    };
+  };
 
   # https://devenv.sh/processes/
-  # processes.cargo-watch.exec = "cargo-watch";
   processes.nightscout.exec = ''
     export BASE_URL="http://localhost:8888"
     export MONGODB_URI="mongodb://localhost:27017/cgm"
@@ -47,10 +57,17 @@ in
   services.nginx.httpConfig = ''
     server {
       listen       8888;
-      server_name  localhost;
+      server_name  _;
+
+      location ~ ^/api/v4/.+\.php$ {
+        root ${config.env.DEVENV_ROOT}/backend;
+        include ${pkgs.nginx}/conf/fastcgi.conf;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:${config.languages.php.fpm.pools.web.socket};
+      }
 
       location /api/v4 {
-        proxy_pass http://localhost:8080;
+        try_files $uri $uri/ $uri.php$is_args$query_string;
       }
 
       location / {
@@ -58,32 +75,5 @@ in
       }
     }
   '';
-
-  # https://devenv.sh/scripts/
-  # scripts.hello.exec = ''
-  #   echo hello from $GREET
-  # '';
-
-  # enterShell = ''
-  #   hello
-  #   git --version
-  # '';
-
-  # https://devenv.sh/tasks/
-  # tasks = {
-  #   "myproj:setup".exec = "mytool build";
-  #   "devenv:enterShell".after = [ "myproj:setup" ];
-  # };
-
-  # https://devenv.sh/tests/
-  # enterTest = ''
-  #   echo "Running tests"
-  #   git --version | grep --color=auto "${pkgs.git.version}"
-  # '';
-
-  # https://devenv.sh/git-hooks/
-  # git-hooks.hooks.shellcheck.enable = true;
-
-  # See full reference at https://devenv.sh/reference/options/
 
 }
