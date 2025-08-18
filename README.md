@@ -1,4 +1,19 @@
-## Roadmap
+This project is an adaptation of the [Nightscout Web
+CGM](https://github.com/nightscout/cgm-remote-monitor).
+
+## What
+
+* Decouple the backend API from the frontend UI
+* Constrain the domain using types and computational effects
+* Streamline and simplify DevEx and DevOps
+
+## Why
+
+* Increase maintainability
+* Reduce time to ship changes
+* `#IAmNotWaiting`
+
+## How
 
 ```mermaid
 gantt
@@ -37,7 +52,9 @@ flowchart LR
 
 This is our starting point.  Plain old Nightscout.
 
-### Phase 1
+### Phase 1 (in progress)
+
+Backlog: [Phase 1 milestone](https://github.com/earldouglas/cloud-glucose-monitor/milestone/1)
 
 ```mermaid
 flowchart LR
@@ -46,7 +63,7 @@ flowchart LR
     Gateway@{ shape: diamond }
     MongoDB@{ shape: cylinder }
     Frontend@{ label: "Frontend\n(Nightscout)" }
-    Backend@{ label: "Backend\n(Scala)" }
+    Backend@{ label: "Backend\n(PHP)" }
 
     User --> Gateway
 
@@ -65,7 +82,9 @@ Here, we add:
     * Routes `/api/v4/*` to the backend
     * Routes everything else to the frontend
 
-### Phase 2 (in progress)
+### Phase 2 (next)
+
+Backlog: [Phase 2 milestone](https://github.com/earldouglas/cloud-glucose-monitor/milestone/2)
 
 ```mermaid
 flowchart LR
@@ -74,7 +93,7 @@ flowchart LR
     Gateway@{ shape: diamond }
     MongoDB@{ shape: cylinder }
     Frontend@{ label: "Frontend\n(Nightscout)" }
-    Backend@{ label: "Backend\n(Scala)" }
+    Backend@{ label: "Backend\n(PHP)" }
 
     User --> Gateway
 
@@ -88,7 +107,7 @@ flowchart LR
 Here, we incrementally move endpoints over from the frontend to the
 backend.
 
-### Phase 3 (next)
+### Phase 3 (later)
 
 ```mermaid
 flowchart LR
@@ -97,7 +116,7 @@ flowchart LR
     Gateway@{ shape: diamond }
     MongoDB@{ shape: cylinder }
     Frontend@{ label: "Frontend\n(Nightscout)" }
-    Backend@{ label: "Backend\n(Scala)" }
+    Backend@{ label: "Backend\n(PHP)" }
 
     User --> Gateway
 
