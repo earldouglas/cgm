@@ -57,7 +57,8 @@
           $cursor = $manager->executeCommand('admin', $command);
           return $cursor->toArray();
         }
-      )->map(
+      )
+      ->map(
         function ($x) {
           return 'yep';
         }
@@ -80,7 +81,8 @@
           $cursor = $manager->executeCommand('admin', $command);
           return $cursor->toArray();
         }
-      )->map(
+      )
+      ->map(
         function ($x) {
           return 'yep';
         }
