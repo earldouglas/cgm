@@ -21,7 +21,10 @@ in
   languages.php = {
     enable = true;
     version = "8.4";
-    extensions = [ "mongodb" ];
+    extensions = [
+      "curl"
+      "mongodb"
+    ];
 
     ini = ''
       memory_limit = 512M
