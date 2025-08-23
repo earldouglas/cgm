@@ -13,24 +13,20 @@
       ->run()
       ->getOrElse('nope');
 
-    return
-      json_encode(
-        [
-          'db' => $db,
-        ],
-        JSON_PRETTY_PRINT
-      );
+    return [
+      'db' => $db,
+    ];
   }
 
   if (getenv('TEST') !== false) {
 
     require_once dirname(__FILE__) . '/../test/assert.php';
 
-    assertEquals(
-      'Health check shows db: ok',
-      'ok',
-      json_decode(getHealth(), true)['db'],
-    );
+    $name = 'Health data';
+    $expected = [ 'db' => 'ok' ];
+    $observed = getHealth();
+
+    assertEquals($name, $expected, $observed);
   }
 
 ?>
