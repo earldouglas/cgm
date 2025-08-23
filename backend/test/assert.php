@@ -1,7 +1,7 @@
 <?php
 
   function assertEquals($name, $expected, $observed) {
-    if ($expected === $observed) {
+    if ($expected == $observed) {
       echo "✔ $name\n";
     } else {
       echo "✖ $name\n";

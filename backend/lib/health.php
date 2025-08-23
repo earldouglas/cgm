@@ -9,11 +9,9 @@
         function ($manager) {
           return 'ok';
         }
-      )->run(
-        function () {
-          return 'nope';
-        }
-      );
+      )
+      ->run()
+      ->getOrElse('nope');
 
     return
       json_encode(
