@@ -1,5 +1,7 @@
 <?php
 
+  require_once dirname(__FILE__) . '/option.php';
+
   class DB {
 
     private $uri;
@@ -10,19 +12,18 @@
       $this->uri = $uri;
     }
 
-    public function run($k) {
+    public function run() {
 
-      $result = NULL;
+      $result = new None();
 
       try {
         $manager = new MongoDB\Driver\Manager($this->uri);
         $command = new MongoDB\Driver\Command(['ping' => 1]);
         $cursor = $manager->executeCommand('admin', $command);
-        $result = ($this->k)($manager);
+        $result = new Some(($this->k)($manager));
       } catch(MongoDB\Driver\Exception\Exception $e) {
         $message = "connection failure: $e";
         error_log($message);
-        $result = $k();
       }
 
       return $result;
@@ -51,7 +52,7 @@
 
     assertEquals(
       'DB should work with default URI',
-      'yep',
+      new Some('yep'),
       new DB(
         function ($manager) {
           $command = new MongoDB\Driver\Command(['ping' => 1]);
@@ -62,16 +63,12 @@
         function ($x) {
           return 'yep';
         }
-      )->run(
-        function () {
-          return 'nope';
-        }
-      )
+      )->run()
     );
 
     assertEquals(
       'DB should not work with a bad URI',
-      'nope',
+      new None(),
       new DB(
         function ($manager) {
           $command = new MongoDB\Driver\Command(['ping' => 1]);
@@ -83,11 +80,7 @@
         function ($x) {
           return 'yep';
         }
-      )->run(
-        function () {
-          return 'nope';
-        }
-      )
+      )->run()
     );
   }
 
