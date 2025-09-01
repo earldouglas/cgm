@@ -14,6 +14,9 @@ let
     inherit pkgs nodejs;
   };
 
+  api-secret = "1234567890abc";
+  api-secret-sha1 = builtins.hashString "sha1" api-secret;
+
 in
 {
 
@@ -46,7 +49,7 @@ in
   processes.nightscout.exec = ''
     export BASE_URL="http://localhost:8888"
     export MONGODB_URI="mongodb://localhost:27017/cgm"
-    export API_SECRET=1234567890abc
+    export API_SECRET=${api-secret}
     export HOSTNAME=localhost
     export INSECURE_USE_HTTP=true
     export PORT=1337
@@ -85,4 +88,18 @@ in
     find backend/ -type f -name "*.php" -print0 | \
       xargs -n 1 -0 php
   '';
+
+  processes.mongodb-init = {
+    exec = ''
+      curl 'http://localhost:8888/api/v1/profile/' \
+        --retry 30 \
+        --retry-delay 1 \
+        --retry-connrefused \
+        -X PUT \
+        -H 'Content-Type: application/json' \
+        -H 'api-secret: ${api-secret-sha1}' \
+        --data @./test/profile.json
+    '';
+  };
+
 }
