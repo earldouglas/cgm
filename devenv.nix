@@ -140,7 +140,7 @@ in
     fi
   '';
 
-  processes.mongodb-init = {
+  processes.hydrate = {
     exec = ''
       curl 'http://localhost:8888/api/v1/profile/' \
         --retry 30 \
