@@ -83,10 +83,61 @@ in
   '';
 
   enterTest = ''
-    wait_for_port 8888
-    export TEST=true
-    find backend/ -type f -name "*.php" -print0 | \
-      xargs -n 1 -0 php
+
+    function test() {
+      wait_for_port 8888
+
+      echo "Running tests..."
+
+      PASS=true
+
+      for i in `find backend/ -type f -name "*.php"`
+      do
+        export TEST=true
+        php "''${i}" || PASS=false
+      done
+
+      if [ "''${PASS}" = "true" ]
+      then
+        echo -e "\033[32m✔\033[0m All tests passed!"
+      else
+        echo -e "\033[31m✖\033[0m Some tests failed!"
+        return -1
+      fi
+    }
+
+    function wait() {
+      ${pkgs.inotifyTools}/bin/inotifywait \
+        --exclude '(\.devenv.*)|(devenv.local.nix)|(\.git/.*)' \
+        -e modify \
+        -e close_write \
+        -e moved_to \
+        -e moved_from \
+        -e move \
+        -e move_self \
+        -e create \
+        -e delete \
+        -e delete_self \
+        -e unmount \
+        -r \
+        .
+    }
+
+    function watch() {
+      while [ TRUE ]
+      do
+        test || true
+        echo "Watching for changes..."
+        wait
+      done
+    }
+
+    if [ "''${WATCH:-}" = "" ]
+    then
+      test
+    else
+      watch
+    fi
   '';
 
   processes.mongodb-init = {
