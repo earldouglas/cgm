@@ -2,13 +2,15 @@
 
   function getHealthJson() {
 
-    require_once dirname(__FILE__) . '/../../lib/health.php';
+    require_once dirname(__FILE__) . '/../../l2-use-cases/healthcheck.php';
+    require_once dirname(__FILE__) . '/../../l3-drivers/dbhealth.php';
 
-    $health = getHealth();
+    $dbHealth = new MongoDBHealth();
+    $health = new HealthCheck($dbHealth);
 
     $json =
       json_encode(
-        $health,
+        $health->getHealth(),
         JSON_PRETTY_PRINT
       );
 
@@ -24,14 +26,18 @@
   if (getenv('TEST') !== false) {
 
     require_once dirname(__FILE__) . '/../../test/assert.php';
-    require_once dirname(__FILE__) . '/../../lib/curl.php';
+    require_once dirname(__FILE__) . '/../../test/http.php';
 
     $response = get('http://localhost:8888/api/v4/health');
-    $health = json_decode($response, true);
 
     $name = 'Health check';
-    $expected = 'ok';
-    $observed = $health['db'];
+    $expected =
+      stripMargin(
+        '|{
+         |    "db": "healthy"
+         |}'
+      );
+    $observed = $response;
 
     assertEquals($name, $expected, $observed);
   }

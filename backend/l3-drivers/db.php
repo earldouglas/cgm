@@ -1,6 +1,6 @@
 <?php
 
-  require_once dirname(__FILE__) . '/option.php';
+  require_once dirname(__FILE__) . '/../l1-domain/option.php';
 
   class DB {
 

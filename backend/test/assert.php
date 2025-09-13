@@ -1,5 +1,21 @@
 <?php
 
+  function stripMargin($x) {
+    $lines = explode("\n", $x);
+
+    $strippedLines =
+      array_map(
+        function ($line) {
+          return preg_replace('/^\s*[|]/', '', $line);
+        },
+        $lines
+      );
+
+    $stripped = join("\n", $strippedLines);
+
+    return $stripped;
+  }
+
   function assertEquals($name, $expected, $observed) {
     if ($expected == $observed) {
       echo "✔ $name\n";
