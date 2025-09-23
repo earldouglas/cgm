@@ -2,15 +2,16 @@
 
   function getHealthJson() {
 
+    require_once dirname(__FILE__) . '/../../l1-domain/health.php';
     require_once dirname(__FILE__) . '/../../l2-use-cases/healthcheck.php';
-    require_once dirname(__FILE__) . '/../../l3-drivers/dbhealth.php';
+    require_once dirname(__FILE__) . '/../../l3-drivers/health.php';
 
-    $dbHealth = new MongoDBHealth();
-    $health = new HealthCheck($dbHealth);
+    $systemHealth = new SystemHealth();
+    $healthCheck = new HealthCheck($systemHealth);
 
     $json =
       json_encode(
-        $health->getHealth(),
+        $healthCheck->getHealth(),
         JSON_PRETTY_PRINT
       );
 

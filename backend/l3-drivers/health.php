@@ -1,10 +1,12 @@
 <?php
 
+  require_once dirname(__FILE__) . '/../l1-domain/health.php';
   require_once dirname(__FILE__) . '/../l2-use-cases/healthcheck.php';
 
-  class MongoDBHealth implements DBHealth {
 
-    public function isHealthy(): bool {
+  class SystemHealth implements Health {
+
+    public function isDbHealthy(): bool {
 
       require_once dirname(__FILE__) . '/db.php';
 
@@ -23,11 +25,11 @@
 
     require_once dirname(__FILE__) . '/../test/assert.php';
 
-    $mongoDBHealth = new MongoDBHealth();
+    $mongoHealth = new SystemHealth();
 
     $name = 'Health data';
     $expected = True;
-    $observed = $mongoDBHealth->isHealthy();
+    $observed = $mongoHealth->isDbHealthy();
 
     assertEquals($name, $expected, $observed);
   }
