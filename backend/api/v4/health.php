@@ -11,7 +11,7 @@
 
     $json =
       json_encode(
-        $healthCheck->getHealth(),
+        $healthCheck->getHealth()->run(array('api:healthcheck:read'))->value,
         JSON_PRETTY_PRINT
       );
 
