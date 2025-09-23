@@ -83,9 +83,9 @@ in
   '';
 
   enterTest = ''
+    wait_for_port 8888
 
     function test() {
-      wait_for_port 8888
 
       echo "Running tests..."
 
