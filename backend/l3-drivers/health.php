@@ -1,7 +1,6 @@
 <?php
 
   require_once dirname(__FILE__) . '/../l1-domain/health.php';
-  require_once dirname(__FILE__) . '/../l2-use-cases/healthcheck.php';
 
 
   class SystemHealth implements Health {

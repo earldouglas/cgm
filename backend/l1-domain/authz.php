@@ -1,5 +1,11 @@
 <?php
 
+  function computeAccessToken($apiSecret, $subjectId, $subjectName) {
+    $abbrev = substr(preg_replace('/[\W]/', '', $subjectName), 0, 10);
+    $hash = substr(sha1(sha1($apiSecret) . $subjectId), 0, 16);
+    return $abbrev . '-' . $hash;
+  }
+
   interface AuthZResult {
     public function isAllowed(): bool;
   }

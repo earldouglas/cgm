@@ -20,6 +20,17 @@ let
 in
 {
 
+  # https://devenv.sh/basics/
+  env.API_SECRET = api-secret;
+  env.API_SECRET_SHA1 = api-secret-sha1;
+
+  # https://devenv.sh/packages/
+  packages = [
+    pkgs.curl
+    pkgs.jq
+    pkgs.time
+  ];
+
   # https://devenv.sh/languages/
   languages.php = {
     enable = true;
@@ -41,6 +52,9 @@ in
         "pm.min_spare_servers" = 1;
         "pm.max_spare_servers" = 5;
         "security.limit_extensions" = ".php";
+      };
+      phpEnv = {
+        "API_SECRET" = api-secret;
       };
     };
   };
@@ -83,7 +97,13 @@ in
   '';
 
   enterTest = ''
-    wait_for_port 8888
+
+    echo 'Waiting for backend...'
+    curl -s 'http://localhost:8888/api/v1/status' \
+      --retry 30 \
+      --retry-delay 1 \
+      --retry-connrefused \
+      -H 'api-secret: ${api-secret-sha1}' > /dev/null 2> /dev/null
 
     function test() {
 
@@ -126,7 +146,7 @@ in
     function watch() {
       while [ TRUE ]
       do
-        test || true
+        time test || true
         echo "Watching for changes..."
         wait
       done
@@ -142,14 +162,21 @@ in
 
   processes.hydrate = {
     exec = ''
-      curl 'http://localhost:8888/api/v1/profile/' \
+
+      echo 'Waiting for backend'
+      curl -s 'http://localhost:8888/api/v1/status' \
         --retry 30 \
         --retry-delay 1 \
         --retry-connrefused \
+        -H 'api-secret: ${api-secret-sha1}' > /dev/null 2> /dev/null
+
+      echo 'Setting test profile'
+      curl -s 'http://localhost:8888/api/v1/profile' \
         -X PUT \
         -H 'Content-Type: application/json' \
         -H 'api-secret: ${api-secret-sha1}' \
         --data @./test/profile.json
+
     '';
   };
 
