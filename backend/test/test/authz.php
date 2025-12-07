@@ -1,6 +1,6 @@
 <?php
 
-  require_once dirname(__FILE__) . '/../l1-domain/authz.php';
+  require_once dirname(__FILE__) . '/../../src/l1-domain/authz.php';
 
   function createAccessToken($permissions) {
 

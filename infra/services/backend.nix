@@ -4,6 +4,9 @@
   hostName,
   domain,
   apiSecret,
+  dbName,
+  dbUsername,
+  dbPassword,
   ...
 }:
 
@@ -36,6 +39,8 @@
     };
     phpEnv = {
       "API_SECRET" = apiSecret;
+      "MONGODB_ROOT" = "mongodb://${dbUsername}:${dbPassword}@localhost:27017";
+      "MONGODB_NAME" = dbName;
     };
     phpOptions = ''
       memory_limit = 512M
@@ -53,7 +58,7 @@
 
   services.nginx.virtualHosts."${hostName}.${domain}" = {
     locations."~ ^/api/v4/.+\\.php$".extraConfig = ''
-      root ${../../backend};
+      root ${../../backend/src};
       include ${pkgs.nginx}/conf/fastcgi.conf;
       fastcgi_split_path_info ^(.+\.php)(/.+)$;
       fastcgi_pass unix:${config.services.phpfpm.pools.cgm.socket};

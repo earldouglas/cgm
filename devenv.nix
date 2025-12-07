@@ -17,6 +17,9 @@ let
   api-secret = "1234567890abc";
   api-secret-sha1 = builtins.hashString "sha1" api-secret;
 
+  mongodb-root = "mongodb://localhost:27017";
+  mongodb-name = "cgm";
+
 in
 {
 
@@ -55,14 +58,16 @@ in
       };
       phpEnv = {
         "API_SECRET" = api-secret;
+        "MONGODB_ROOT" = mongodb-root;
+        "MONGODB_NAME" = mongodb-name;
       };
     };
   };
 
   # https://devenv.sh/processes/
   processes.nightscout.exec = ''
-    export BASE_URL="http://localhost:8888"
-    export MONGODB_URI="mongodb://localhost:27017/cgm"
+    export BASE_URL=http://localhost:8888
+    export MONGODB_URI=${mongodb-root}/${mongodb-name}
     export API_SECRET=${api-secret}
     export HOSTNAME=localhost
     export INSECURE_USE_HTTP=true
@@ -80,7 +85,7 @@ in
       server_name  _;
 
       location ~ ^/api/v4/.+\.php$ {
-        root ${config.env.DEVENV_ROOT}/backend;
+        root ${config.env.DEVENV_ROOT}/backend/src;
         include ${pkgs.nginx}/conf/fastcgi.conf;
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_pass unix:${config.languages.php.fpm.pools.web.socket};
@@ -111,9 +116,10 @@ in
 
       PASS=true
 
-      for i in `find backend/ -type f -name "*.php"`
+      for i in `find backend/test/ -type f -name "*.php"`
       do
-        export TEST=true
+        export MONGODB_ROOT=${mongodb-root}
+        export MONGODB_NAME=${mongodb-name}
         php "''${i}" || PASS=false
       done
 
