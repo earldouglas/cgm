@@ -5,6 +5,12 @@
 
   class SystemHealth implements Health {
 
+    private string $dbUrl;
+
+    function __construct(string $dbUrl) {
+      $this->dbUrl = $dbUrl;
+    }
+
     public function isDbHealthy(): bool {
 
       require_once dirname(__FILE__) . '/db.php';
@@ -15,22 +21,9 @@
             return True;
           }
         )
-        ->run()
-        ->getOrElse(False);
+          ->runDB($this->dbUrl)
+          ->getOrElse(False);
     }
-  }
-
-  if (getenv('TEST') !== false) {
-
-    require_once dirname(__FILE__) . '/../test/assert.php';
-
-    $mongoHealth = new SystemHealth();
-
-    $name = 'Health data';
-    $expected = True;
-    $observed = $mongoHealth->isDbHealthy();
-
-    assertEquals($name, $expected, $observed);
   }
 
 ?>

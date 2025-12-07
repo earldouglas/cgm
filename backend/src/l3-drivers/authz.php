@@ -3,24 +3,26 @@
   declare(strict_types=1);
 
   require_once dirname(__FILE__) . '/../l1-domain/authz.php';
+  require_once dirname(__FILE__) . '/../l3-drivers/db.php';
 
-  class MongoAuthZ {
+  class DBAuthZ {
 
-    private $apiSecret;
-    private $authz;
+    private string $apiSecret;
+    private AuthZ $authz;
+    private string $dbName;
 
     function __construct(AuthZ $authz) {
       $this->apiSecret = getenv('API_SECRET');
       $this->authz = $authz;
+      $this->dbName = getenv('MONGODB_NAME');
     }
 
-    private function getSubjects($accessToken) {
+    private function getSubjects($manager, $accessToken) {
 
-      $manager = new MongoDB\Driver\Manager("mongodb://localhost:27017");
       $query = new MongoDB\Driver\Query(array());
 
       // :: MongoDB\Driver\Cursor
-      $cursor = $manager->executeQuery('cgm.auth_subjects', $query);
+      $cursor = $manager->executeQuery("{$this->dbName}.auth_subjects", $query);
 
       // Convert cursor to Array and print result
       $allSubjects = $cursor->toArray();
@@ -43,10 +45,7 @@
       return $matchingSubjects;
     }
 
-    private function getRoles($names) {
-
-      $manager =
-        new MongoDB\Driver\Manager("mongodb://localhost:27017");
+    private function getRoles($manager, $names) {
 
       $filter = [
         '$or' =>
@@ -60,7 +59,7 @@
 
 
       // :: MongoDB\Driver\Cursor
-      $cursor = $manager->executeQuery('cgm.auth_roles', $query);
+      $cursor = $manager->executeQuery("{$this->dbName}.auth_roles", $query);
 
       // Convert cursor to Array and print result
       $allRoles = $cursor->toArray();
@@ -68,18 +67,18 @@
       return $allRoles;
     }
 
-    private function getPermissions($accessToken) {
+    private function getPermissions($manager, $accessToken) {
 
       require_once dirname(__FILE__) . '/../l1-domain/flatmap.php';
 
-      $subjects = $this->getSubjects($accessToken);
+      $subjects = $this->getSubjects($manager, $accessToken);
 
       $permissions =
         array_flatMap(
-          function ($subject) {
+          function ($subject) use ($manager) {
             return array_flatMap(
               fn($x) => $x->permissions,
-              $this->getRoles($subject->roles)
+              $this->getRoles($manager, $subject->roles)
             );
           },
           $subjects,
@@ -88,10 +87,13 @@
       return $permissions;
     }
 
-    function run($accessToken) {
-      $permissions = $this->getPermissions($accessToken);
-      $result = $this->authz->run($permissions);
-      return $result;
+    function runDBAuthZ($accessToken) {
+      $k = function ($manager) use ($accessToken) {
+        $permissions = $this->getPermissions($manager, $accessToken);
+        $result = $this->authz->runAuthZ($permissions);
+        return $result;
+      };
+      return new DB($k);
     }
 
   }

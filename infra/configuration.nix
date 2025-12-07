@@ -22,6 +22,10 @@ let
   hostName = getEnv "HOST_NAME";
   domain = getEnv "DOMAIN";
 
+  dbName = getEnv "MONGODB_NAME";
+  dbUsername = getEnv "MONGODB_USERNAME";
+  dbPassword = getEnv "MONGODB_PASSWORD";
+
   system = import ./services/system.nix {
     inherit modulesPath;
     inherit hostName domain;
@@ -29,19 +33,17 @@ let
 
   db = import ./services/db.nix {
     inherit config lib pkgs;
-    dbName = getEnv "MONGO_DB_NAME";
-    dbUsername = getEnv "MONGO_DB_USERNAME";
-    dbPassword = getEnv "MONGO_DB_PASSWORD";
+    inherit dbName dbUsername dbPassword;
   };
 
   frontend = import ./services/frontend.nix {
     inherit config lib pkgs;
-    inherit apiSecret nightscoutPort;
+    inherit apiSecret nightscoutPort dbName dbUsername dbPassword;
   };
 
   backend = import ./services/backend.nix {
     inherit config pkgs;
-    inherit hostName domain apiSecret;
+    inherit hostName domain apiSecret dbName dbUsername dbPassword;
   };
 
   gateway = import ./services/gateway.nix {

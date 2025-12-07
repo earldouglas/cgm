@@ -7,15 +7,22 @@
 
   class HttpAuthZ {
 
-    private $authz;
+    private string $dbUrl;
+    private DBAuthZ $dbAuthz;
 
-    function __construct(AuthZ $authz) {
-      $this->authz = new MongoAuthZ($authz);
+    function __construct(string $dbUrl, AuthZ $authz) {
+      $this->dbUrl = $dbUrl;
+      $this->dbAuthz = new DBAuthZ($authz);
     }
 
-    function run() {
+    function runHttpAuthZ() {
       $accessToken = $_SERVER['HTTP_API_SECRET'];
-      $result = $this->authz->run($accessToken);
+      $result =
+        $this
+          ->dbAuthz
+          ->runDBAuthZ($accessToken)
+          ->runDB($this->dbUrl)
+          ->getOrElse(new AuthZDenied());
 
       if ($result->isAllowed()) {
         header('Content-Type: application/json; charset=utf-8');

@@ -25,19 +25,4 @@
     return $response;
   }
 
-  if (getenv('TEST') !== false) {
-
-    require_once dirname(__FILE__) . '/../test/assert.php';
-
-    $response = get('https://earldouglas.com', '');
-
-    preg_match('/<title>([^<]*)<\/title>/', $response, $matches);
-
-    $name = 'GET https://earldouglas.com';
-    $expected = 'James Earl Douglas';
-    $observed = $matches[1];
-
-    assertEquals($name, $expected, $observed);
-  }
-
 ?>

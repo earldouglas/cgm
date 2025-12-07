@@ -4,6 +4,9 @@
   pkgs,
   apiSecret,
   nightscoutPort,
+  dbName,
+  dbUsername,
+  dbPassword,
   ...
 }:
 
@@ -63,7 +66,7 @@ in
       #
       # See https://github.com/nightscout/cgm-remote-monitor?tab=readme-ov-file#required
 
-      MONGODB_URI = "mongodb://nightscout:nightscout@localhost:27017/nightscout";
+      MONGODB_URI = "mongodb://${dbUsername}:${dbPassword}@localhost:27017/${dbName}";
       API_SECRET = apiSecret;
       MONGODB_COLLECTION = "entries";
       DISPLAY_UNITS = "mg/dl";
