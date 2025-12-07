@@ -85,7 +85,7 @@ in
       server_name  _;
 
       location ~ ^/api/v4/.+\.php$ {
-        root ${config.env.DEVENV_ROOT}/backend;
+        root ${config.env.DEVENV_ROOT}/backend/src;
         include ${pkgs.nginx}/conf/fastcgi.conf;
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_pass unix:${config.languages.php.fpm.pools.web.socket};
@@ -116,7 +116,7 @@ in
 
       PASS=true
 
-      for i in `find backend/ -type f -name "*.php"`
+      for i in `find backend/test/ -type f -name "*.php"`
       do
         export MONGODB_ROOT=${mongodb-root}
         export MONGODB_NAME=${mongodb-name}
