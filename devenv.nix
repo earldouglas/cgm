@@ -133,7 +133,7 @@ in
     }
 
     function wait() {
-      ${pkgs.inotifyTools}/bin/inotifywait \
+      ${pkgs.inotify-tools}/bin/inotifywait \
         --exclude '(\.devenv.*)|(devenv.local.nix)|(\.git/.*)' \
         -e modify \
         -e close_write \
