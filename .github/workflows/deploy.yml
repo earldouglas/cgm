@@ -32,3 +32,4 @@ jobs:
         MONGO_DB_NAME: ${{ secrets.MONGO_DB_NAME }}
         MONGO_DB_USERNAME: ${{ secrets.MONGO_DB_USERNAME }}
         MONGO_DB_PASSWORD: ${{ secrets.MONGO_DB_PASSWORD }}
+        ACME_EMAIL: ${{ secrets.ACME_EMAIL }}

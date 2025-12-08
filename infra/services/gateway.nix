@@ -4,10 +4,16 @@
   hostName,
   domain,
   nightscoutPort,
+  acmeEmail,
   ...
 }:
 
 {
+
+  networking.firewall.allowedTCPPorts = [ 80 443 ];
+
+  security.acme.defaults.email = acmeEmail;
+  security.acme.acceptTerms = true;
 
   services.nginx.enable = true;
   services.nginx.recommendedOptimisation = true;
@@ -20,7 +26,10 @@
     add_header Permissions-Policy "interest-cohort=()";
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
   '';
+
   services.nginx.virtualHosts."${hostName}.${domain}" = {
+    enableACME = true;
+    forceSSL = true;
     locations."/".extraConfig = ''
       proxy_pass http://localhost:${toString nightscoutPort};
     '';

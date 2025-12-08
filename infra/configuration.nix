@@ -49,6 +49,7 @@ let
   gateway = import ./services/gateway.nix {
     inherit config pkgs;
     inherit hostName domain nightscoutPort;
+    acmeEmail = getEnv "ACME_EMAIL";
   };
 
 in
