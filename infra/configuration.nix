@@ -39,6 +39,9 @@ let
   frontend = import ./services/frontend.nix {
     inherit config lib pkgs;
     inherit apiSecret nightscoutPort dbName dbUsername dbPassword;
+    dexcomShareAccountName = getEnv "DEXCOM_SHARE_ACCOUNT_NAME";
+    dexcomSharePassword = getEnv "DEXCOM_SHARE_PASSWORD";
+    dexcomShareRegion = getEnv "DEXCOM_SHARE_REGION";
   };
 
   backend = import ./services/backend.nix {
