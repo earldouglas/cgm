@@ -7,6 +7,9 @@
   dbName,
   dbUsername,
   dbPassword,
+  dexcomShareAccountName,
+  dexcomSharePassword,
+  dexcomShareRegion,
   ...
 }:
 
@@ -80,7 +83,6 @@ in
 
           # "boluscalc"
           # "careportal"
-          # "connect" # get BG from Dexcom
           # "devicestatus"
           # "food"
 
@@ -98,6 +100,8 @@ in
           "cob" # carbs on board
           "basal" # basal profile
           "bolus" # bolus rendering
+
+          "connect" # get BG from Dexcom
         ]
       );
 
@@ -123,10 +127,10 @@ in
       #
       # See https://github.com/nightscout/cgm-remote-monitor?tab=readme-ov-file#connect-nightscout-connect
 
-      #CONNECT_SOURCE = "dexcomshare";
-      #CONNECT_SHARE_ACCOUNT_NAME = dexcomUsername;
-      #CONNECT_SHARE_PASSWORD = dexcomPassword;
-      #CONNECT_SHARE_REGION = "ous";
+      CONNECT_SOURCE = "dexcomshare";
+      CONNECT_SHARE_ACCOUNT_NAME = dexcomShareAccountName;
+      CONNECT_SHARE_PASSWORD = dexcomSharePassword;
+      CONNECT_SHARE_REGION = dexcomShareRegion;
 
       ## Glooko ########################################################
       #
