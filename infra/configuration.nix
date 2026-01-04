@@ -46,6 +46,16 @@ let
     inherit hostName domain apiSecret dbName dbUsername dbPassword;
   };
 
+  tconnectsync = import ./services/tconnectsync.nix {
+    inherit nightscoutPort;
+    tconnectEmail = getEnv "TCONNECT_EMAIL";
+    tconnectPassword = getEnv "TCONNECT_PASSWORD";
+    tconnectRegion = getEnv "TCONNECT_REGION";
+    nightscoutSecret = getEnv "TCONNECT_NS_SECRET";
+    timezone = getEnv "TCONNECT_TIMEZONE_NAME";
+    pumpSerialNumber = getEnv "TCONNECT_PUMP_SERIAL_NUMBER";
+  };
+
   gateway = import ./services/gateway.nix {
     inherit config pkgs;
     inherit hostName domain nightscoutPort;
@@ -60,6 +70,7 @@ in
     db
     frontend
     backend
+    tconnectsync
     gateway
   ];
 

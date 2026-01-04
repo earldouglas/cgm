@@ -78,7 +78,6 @@ in
       ENABLE = lib.strings.concatStrings (
         lib.intersperse " " [
 
-          # "basal"
           # "boluscalc"
           # "careportal"
           # "connect" # get BG from Dexcom
@@ -95,6 +94,10 @@ in
           "timeago" # show time since last CGM entry
           "wake-lock" # show wake lock toggle button
 
+          "iob" # insulin on board
+          "cob" # carbs on board
+          "basal" # basal profile
+          "bolus" # bolus rendering
         ]
       );
 
