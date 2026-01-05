@@ -28,8 +28,8 @@ let
     src = pkgs.fetchFromGitHub {
       owner = "earldouglas";
       repo = "cgm-remote-monitor";
-      rev = "1822278ce5a91a0c4eac1987956877e4aeb34ef4";
-      hash = "sha256-5Y0N5XY2yjkerZu/2aldqOSzgplHcCvPh1a47kuna7c=";
+      rev = "c2a11f1f8fb7b89e90ff829bd9da9c7897a28263";
+      hash = "sha256-V8YSvjJsEmWjMv6Q1uZU2BEo9BT+H7PdC9FMDiIG6fg=";
     };
 
     npmDepsHash = "sha256-9RslybJ6c/JxmD3UPOba1oVYfxirg52Lp8kiv93TVsI=";
