@@ -26,10 +26,24 @@ jobs:
 
     - run: nix-shell -p nixos-rebuild --run ./infra/deploy.sh
       env:
-        HOST_NAME: ${{ secrets.HOST_NAME }}
-        DOMAIN: ${{ secrets.DOMAIN }}
-        API_SECRET: ${{ secrets.API_SECRET }}
-        MONGODB_NAME: ${{ secrets.MONGODB_NAME }}
-        MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
-        MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+
         ACME_EMAIL: ${{ secrets.ACME_EMAIL }}
+        DOMAIN: ${{ secrets.DOMAIN }}
+        HOST_NAME: ${{ secrets.HOST_NAME }}
+
+        API_SECRET: ${{ secrets.API_SECRET }}
+
+        DEXCOM_SHARE_ACCOUNT_NAME: ${{ secrets.DEXCOM_SHARE_ACCOUNT_NAME }}
+        DEXCOM_SHARE_PASSWORD: ${{ secrets.DEXCOM_SHARE_PASSWORD }}
+        DEXCOM_SHARE_REGION: ${{ secrets.DEXCOM_SHARE_REGION }}
+
+        MONGODB_NAME: ${{ secrets.MONGODB_NAME }}
+        MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+        MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
+
+        TCONNECT_EMAIL: ${{ secrets.TCONNECT_EMAIL }}
+        TCONNECT_NS_SECRET: ${{ secrets.TCONNECT_NS_SECRET }}
+        TCONNECT_PASSWORD: ${{ secrets.TCONNECT_PASSWORD }}
+        TCONNECT_PUMP_SERIAL_NUMBER: ${{ secrets.TCONNECT_PUMP_SERIAL_NUMBER }}
+        TCONNECT_REGION: ${{ secrets.TCONNECT_REGION }}
+        TCONNECT_TIMEZONE_NAME: ${{ secrets.TCONNECT_TIMEZONE_NAME }}
