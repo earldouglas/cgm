@@ -28,8 +28,9 @@
         NS_SECRET = nightscoutSecret;
         TIMEZONE_NAME = timezone;
         PUMP_SERIAL_NUMBER = pumpSerialNumber;
+        AUTOUPDATE_MAX_SLEEP_SECONDS = "600";
       };
-      image = "jwoglom/tconnectsync:2.3.4";
+      image = "jwoglom/tconnectsync:2.3.5";
       cmd = [
         "--auto-update"
       ];
